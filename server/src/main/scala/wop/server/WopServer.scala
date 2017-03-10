@@ -1,23 +1,17 @@
 package wop.server
 
-import java.util.concurrent.Executors
-
 import akka.actor._
+import korolev._
+import korolev.blazeServer.{defaultExecutor, _}
+import korolev.server._
 import org.slf4j.LoggerFactory
 import wop.server.actors.PlayerActor.Notification._
 import wop.server.actors.{MatchMakingActor, PlayerActor}
 import wop.server.controller.{EnterNickNameController, InGameController, MatchMakingController}
 import wop.server.view.{EnterNickNameView, InGameView, MatchMakingView}
-import wop.game.WopState
 
-import scala.concurrent.{ExecutionContext, Future}
-import korolev.blazeServer.defaultExecutor
-import scala.concurrent.duration._
+import scala.concurrent.Future
 import scala.language.postfixOps
-
-import korolev._
-import korolev.server._
-import korolev.blazeServer._
 
 object WopServer extends KorolevBlazeServer {
 
@@ -29,15 +23,17 @@ object WopServer extends KorolevBlazeServer {
   val stateStorage = StateStorage.default[Future, UserState](UserState.EnterNickName(false))
 
   val service = blazeService[Future, UserState, PlayerActor.Command] from KorolevServiceConfig(
-    serverRouter = ServerRouter.empty,
+    serverRouter = ServerRouter
+      .empty,
+      //.withRootPath("/wop/"),
     stateStorage = stateStorage,
     render = {
       val enterNickNameController = new EnterNickNameController()
       val enterNickNameView = new EnterNickNameView(enterNickNameController)
       val inGameController = new InGameController()
       val inGameView = new InGameView(inGameController)
-      val matchMakingContoller = new MatchMakingController()
-      val matchMakingView = new MatchMakingView(matchMakingContoller)
+      val matchMakingController = new MatchMakingController()
+      val matchMakingView = new MatchMakingView(matchMakingController)
 
       enterNickNameView.render orElse
         inGameView.render orElse
@@ -81,8 +77,8 @@ object WopServer extends KorolevBlazeServer {
     },
     head = 'head (
       'link ('href /= "https://fonts.googleapis.com/css?family=Open+Sans", 'rel /= "stylesheet"),
-      'link ('href /= "http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css", 'rel /= "stylesheet"),
-      'link ('href /= "/wop.css", 'rel /= "stylesheet")
+      'link ('href /= "icons/css/ionicons.min.css", 'rel /= "stylesheet"),
+      'link ('href /= "wop.css", 'rel /= "stylesheet")
     )
   )
 }

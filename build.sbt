@@ -1,5 +1,5 @@
 val commonSettings = Seq(
-  scalaVersion := "2.11.8",
+  scalaVersion := "2.12.1",
   version := "0.1.0",
   maintainer := "Aleksey Fomkin <aleksey.fomkin@gmail.com>",
   packageSummary := "Server for Wizards of Portal game",
@@ -20,9 +20,9 @@ lazy val server = project
   .settings(
     name := "Wizards of Portal",
     libraryDependencies ++= Seq(
-      "com.typesafe.akka" %% "akka-actor" % "2.4.9",
-      "com.typesafe.akka" %% "akka-slf4j" % "2.4.9",
-      "com.github.fomkin" %% "korolev-server-blaze" % "0.1.0",
+      "com.typesafe.akka" %% "akka-actor" % "2.4.17",
+      "com.typesafe.akka" %% "akka-slf4j" % "2.4.17",
+      "com.github.fomkin" %% "korolev-server-blaze" % "0.2.1",
       "ch.qos.logback" % "logback-classic" % "1.1.7"
     )
   )
